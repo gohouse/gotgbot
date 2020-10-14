@@ -1,0 +1,19 @@
+{
+  "TgOption": {
+    "Token": "1323450187:xxxxxxxxxxxxxxxxxxxxxxxx",
+    "BotName": "xxx_bot",
+    "ChannelName": "xxx_channel",
+    "HttpsUrl": "https://xxxx.com",
+    "HttpsPort": 443,
+    "Timeout": 0
+  },
+  "Redis": {
+    "Addr": "localhost:6379",
+    "Password": "123456"
+  },
+  "Mysql": {
+    "Driver": "mysql",
+    "Dsn": "root:123456@tcp(localhost:3306)/test?charset=utf8mb4&parseTime=true",
+    "Prefix": "tg_"
+  }
+}
