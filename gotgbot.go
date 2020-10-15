@@ -46,6 +46,11 @@ func (gb *GoTgBot) AnswerCallbackFail(botapi *tgbotapi.BotAPI, callbackId, msgTe
 }
 
 func (gb *GoTgBot) run(botapi *tgbotapi.BotAPI, updates *tgbotapi.UpdatesChannel) {
+	go func(ba *tgbotapi.BotAPI) {
+		for _, v := range gb.HandBot {
+			v(ba)
+		}
+	}(botapi)
 	for ups := range *updates {
 		up := ups
 		go func(update tgbotapi.Update) {
@@ -62,7 +67,9 @@ func (gb *GoTgBot) run(botapi *tgbotapi.BotAPI, updates *tgbotapi.UpdatesChannel
 				log.Info("CallbackQuery act")
 				ctx := bot.NewContext(botapi, &update, gb.Middleware)
 				ctx.Start()
-				gb.CallbackQuery(ctx)
+				for _, v := range gb.CallbackQuery {
+					v(ctx)
+				}
 				return
 			}
 
@@ -82,13 +89,15 @@ func (gb *GoTgBot) run(botapi *tgbotapi.BotAPI, updates *tgbotapi.UpdatesChannel
 				log.Info("wait act")
 				ctx := bot.NewContext(botapi, &update, gb.Middleware)
 				ctx.Start()
-				gb.Wait(ctx)
+				for _, v := range gb.Wait {
+					v(ctx)
+				}
 			}
 		}(up)
 	}
 }
 
-func (gb *GoTgBot) debugCallback(update *tgbotapi.Update)  {
+func (gb *GoTgBot) debugCallback(update *tgbotapi.Update) {
 	var filename = time.Now().Format("0102-150405")
 	var msgFilename = fmt.Sprintf("%s-msg", filename)
 	if update.CallbackQuery != nil {

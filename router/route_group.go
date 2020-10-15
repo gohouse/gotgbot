@@ -10,10 +10,11 @@ import (
 type RouteGroup struct {
 	module        bot.ModuleType
 	routes        []*Route
-	Middleware    []bot.HandleFunc
-	CallbackQuery bot.HandleFunc
-	Wait          bot.HandleFunc
 	children      []*RouteGroup
+	Middleware    []bot.HandleFunc
+	CallbackQuery []bot.HandleFunc
+	Wait          []bot.HandleFunc
+	HandBot       []bot.HandleBot
 }
 
 func NewRouteGroup() (r *RouteGroup) {
@@ -83,7 +84,7 @@ func (rg *RouteGroup) GET(route string, h ...bot.HandleFunc) *Route {
 		log.Panicf("route already exists: %s", route)
 	}
 
-	routeSub := NewRoute(route, "", h...)
+	routeSub := NewRoute(route, h...)
 	rg.routes = append(rg.routes, routeSub)
 	return routeSub
 }
@@ -91,12 +92,16 @@ func (rg *RouteGroup) GET(route string, h ...bot.HandleFunc) *Route {
 func (rg *RouteGroup) BuildHelpList(mot bot.ModuleType) (res []string) {
 	var list = make(map[string]string)
 	for _, v := range rg.routes {
-		list[v.Route] = v.Title
+		if v.Visible {
+			list[v.Route] = v.Title
+		}
 	}
 	for _, v2 := range rg.children {
 		if v2.module == mot {
 			for _, v := range v2.routes {
-				list[v.Route] = v.Title
+				if v.Visible {
+					list[v.Route] = v.Title
+				}
 			}
 			break
 		}
@@ -231,9 +236,20 @@ func (rg *RouteGroup) extractRoute(route string, mot bot.ModuleType, mustMatch b
 	return cors, hand
 }
 
-func (rg *RouteGroup) OnCallbackQuery(h bot.HandleFunc) {
-	rg.CallbackQuery = h
+func (rg *RouteGroup) OnCallbackQuery(h ...bot.HandleFunc) *RouteGroup {
+	rg.CallbackQuery = append(rg.CallbackQuery, h...)
+	return rg
 }
-func (rg *RouteGroup) OnWait(h bot.HandleFunc) {
-	rg.Wait = h
+func (rg *RouteGroup) OnWait(h ...bot.HandleFunc) *RouteGroup {
+	rg.Wait = append(rg.Wait, h...)
+	return rg
+}
+func (rg *RouteGroup) OnInlineQuery(h ...bot.HandleFunc) *RouteGroup {
+	rg.Wait = append(rg.Wait, h...)
+	return rg
+}
+
+func (rg *RouteGroup) Do(h ...bot.HandleBot) *RouteGroup {
+	rg.HandBot = append(rg.HandBot, h...)
+	return rg
 }

@@ -10,6 +10,7 @@ import (
 const abortIndex int8 = math.MaxInt8 / 2
 
 type HandleFunc func(ctx *Context)
+type HandleBot func(botapi *tgbotapi.BotAPI)
 type Context struct {
 	BotAPI        *tgbotapi.BotAPI
 	Update        *tgbotapi.Update
