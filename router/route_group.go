@@ -249,7 +249,7 @@ func (rg *RouteGroup) OnInlineQuery(h ...bot.HandleFunc) *RouteGroup {
 	return rg
 }
 
-func (rg *RouteGroup) Do(h ...bot.HandleBot) *RouteGroup {
+func (rg *RouteGroup) DoAsBot(h ...bot.HandleBot) *RouteGroup {
 	rg.HandBot = append(rg.HandBot, h...)
 	return rg
 }
