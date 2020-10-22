@@ -48,18 +48,18 @@ func (gb *GoTgBot) AnswerCallbackFail(botapi *tgbotapi.BotAPI, callbackId, msgTe
 func (gb *GoTgBot) run(botapi *tgbotapi.BotAPI, updates *tgbotapi.UpdatesChannel) {
 	go func(ba *tgbotapi.BotAPI) {
 		for _, v := range gb.HandBot {
-			v(ba)
+			v(bot.NewContext(botapi, nil, nil))
 		}
 	}(botapi)
 	for ups := range *updates {
 		up := ups
 		go func(update tgbotapi.Update) {
-			////panic回收保护
-			//defer func() {
-			//	if err := recover(); err != nil {
-			//		log.Error("panic recover:", err)
-			//	}
-			//}()
+			//panic回收保护
+			defer func() {
+				if err := recover(); err != nil {
+					log.Error("panic recover:", err)
+				}
+			}()
 			// debug
 			gb.debugCallback(&update)
 			// 启动 callback

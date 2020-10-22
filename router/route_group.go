@@ -14,7 +14,8 @@ type RouteGroup struct {
 	Middleware    []bot.HandleFunc
 	CallbackQuery []bot.HandleFunc
 	Wait          []bot.HandleFunc
-	HandBot       []bot.HandleBot
+	//HandBot       []bot.HandleBot
+	HandBot       []bot.HandleFunc
 }
 
 func NewRouteGroup() (r *RouteGroup) {
@@ -249,7 +250,7 @@ func (rg *RouteGroup) OnInlineQuery(h ...bot.HandleFunc) *RouteGroup {
 	return rg
 }
 
-func (rg *RouteGroup) DoAsBot(h ...bot.HandleBot) *RouteGroup {
+func (rg *RouteGroup) BeforUpdate(h ...bot.HandleFunc) *RouteGroup {
 	rg.HandBot = append(rg.HandBot, h...)
 	return rg
 }

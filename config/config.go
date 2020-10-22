@@ -6,11 +6,15 @@ import (
 	"github.com/sirupsen/logrus"
 )
 var conf *ConfigOption
+type BotOption struct {
+	Ticker int	// 多久自动发一次(min),default:10
+}
 type ConfigOption struct {
 	TgOption  TgOption
 	Mysql     gorose.Config
 	Redis     redis.Options
 	LogOption logrus.Logger
+	BotOption BotOption
 }
 
 func Init(conf2 *ConfigOption) {

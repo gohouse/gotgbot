@@ -3,6 +3,7 @@ package bot
 import (
 	"fmt"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/gohouse/gotgbot/config"
 	"math"
 	"time"
 )
@@ -18,10 +19,11 @@ type Context struct {
 	SendMessageId int
 	index         int8
 	handlers      []HandleFunc
+	Config        *config.ConfigOption
 }
 
 func NewContext(botAPI *tgbotapi.BotAPI, update *tgbotapi.Update, handlers []HandleFunc) *Context {
-	return &Context{BotAPI: botAPI, Update: update, handlers: handlers}
+	return &Context{BotAPI: botAPI, Update: update, handlers: handlers, Config: config.Config()}
 }
 func (c *Context) AnswerCallbackQuerySuccess(id, text string) (tgbotapi.APIResponse, error) {
 	// ⚙️⚒🛠⚒🔗🖊🖋❌✅
